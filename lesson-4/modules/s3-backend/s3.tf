@@ -1,7 +1,6 @@
 # Створюємо S3-бакет
 resource "aws_s3_bucket" "terraform_state" {
   bucket = var.bucket_name
-
   tags = {
     Name        = "Terraform State Bucket"
     Environment = "lesson-4"

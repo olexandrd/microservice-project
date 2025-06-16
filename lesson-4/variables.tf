@@ -1,7 +1,7 @@
 variable "bucket_name" {
   description = "The name of the S3 bucket for Terraform state"
   type        = string
-  default     = "terraform-state-bucket-001001-olexandr"
+  default     = "terraform-state-bucket-0011111-olexandr"
 
 }
 
@@ -14,5 +14,5 @@ variable "table_name" {
 variable "region" {
   description = "The AWS region for the S3 bucket and DynamoDB table"
   type        = string
-  default     = "us-west-2"
+  default     = "us-east-2"
 }
