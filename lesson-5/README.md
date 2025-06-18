@@ -46,7 +46,19 @@ lesson-5/
 ### Getting Started
 
 1. **Initialize Terraform**  
-    From the `lesson-5` directory, initialize the project:
+
+    There is 2 step to initialize the project, first you need to initialize the remote backend and then the main project.
+
+    From the `lesson-5/modules/s3-backend` directory, initialize the remote backend:
+
+    ```bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
+
+    Then, you can go back to the `lesson-5` directory and initialize the main project.
+    From the `lesson-5` directory, run:
 
     ```bash
     terraform init
@@ -66,7 +78,7 @@ lesson-5/
     terraform apply
     ```
 
-4. **Destroy Infrastructure**
+4. **Destroy Infrastructure**  
     To remove the deployed resources, run:
 
     ```bash
