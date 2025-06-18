@@ -17,8 +17,8 @@ module "vpc" {
   vpc_name           = "lesson-5-vpc"
 }
 
-# module "ecr" {
-#   source       = "./modules/ecr"
-#   ecr_name     = "lesson-5-ecr"
-#   scan_on_push = true
-# }
+module "ecr" {
+  source       = "./modules/ecr"
+  ecr_name     = "lesson-5-ecr"
+  scan_on_push = true
+}

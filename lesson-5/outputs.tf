@@ -8,3 +8,9 @@ output "dynamodb_table_name" {
   value       = module.s3_backend.dynamodb_table_name
 }
 
+
+output "ecr_url" {
+  description = "URL ECR репозиторію"
+  value       = module.ecr.ecr_url
+
+}
