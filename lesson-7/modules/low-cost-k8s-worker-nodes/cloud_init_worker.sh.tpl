@@ -49,12 +49,22 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 # 7. Оновити індекси та встановити containerd і Kubernetes-бінарі
 sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-get install -y kubelet kubeadm kubectl amazon-ecr-credential-helper
+
 
 # 8. Налаштувати containerd на systemd cgroup
 containerd config default \
   | sed 's/SystemdCgroup = false/SystemdCgroup = true/' \
   | sudo tee /etc/containerd/config.toml
+sudo mkdir -p /etc/docker
+cat <<EOF | sudo tee /etc/docker/config.json
+{
+  "credsStore": "ecr-login"
+}
+EOF
+
+sudo sed -i '/[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s|config_path *= *""|config_path ="/etc/docker"|' /etc/containerd/config.toml
+
 sudo systemctl restart containerd
 
 # 9. Чекати появи CA hash у SSM

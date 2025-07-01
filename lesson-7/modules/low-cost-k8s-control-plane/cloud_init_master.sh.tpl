@@ -42,6 +42,15 @@ sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli container
 containerd config default \
   | sed 's/SystemdCgroup = false/SystemdCgroup = true/' \
   | sudo tee /etc/containerd/config.toml
+sudo mkdir -p /etc/docker
+cat <<EOF | sudo tee /etc/docker/config.json
+{
+  "credsStore": "ecr-login"
+}
+EOF
+
+sudo sed -i '/[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s|config_path *= *""|config_path ="/etc/docker"|' /etc/containerd/config.toml
+
 sudo systemctl restart containerd
 sudo systemctl enable --now containerd
 
@@ -53,20 +62,21 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 # 7. Install Kubernetes tools
 sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-get install -y kubelet kubeadm kubectl amazon-ecr-credential-helper
 sudo systemctl enable --now containerd
 
 # 8. kubeadm init & SSM logic
 KUBEADM_TOKEN=$(aws ssm get-parameter --name "${kubeadm_token_ssm_name}" \
   --region ${region} --with-decryption --query "Parameter.Value" --output text)
 POD_CIDR="${pod_network_cidr}"
-API_SERVER_IP="${public_ip}"
+
+PUBLIC_IP=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
 
 sudo kubeadm init \
   --token $KUBEADM_TOKEN \
   --pod-network-cidr=$POD_CIDR \
-  --apiserver-cert-extra-sans=${API_SERVER_IP} \
-  --control-plane-endpoint=${API_SERVER_IP}:6443 \
+  --apiserver-cert-extra-sans=$PUBLIC_IP \
+  --control-plane-endpoint=$PUBLIC_IP:6443 \
   --ignore-preflight-errors=all
 
 HASH=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt \
@@ -80,7 +90,7 @@ aws ssm put-parameter --name "${ca_hash_ssm_name}" --value "$HASH" \
 # 9. Configure local kubeconfig
 mkdir -p /root/.kube
 mkdir -p /home/ubuntu/.kube
-cp   /root/.kube/config
+cp /etc/kubernetes/admin.conf /root/.kube/config
 cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
 chown ubuntu:ubuntu /home/ubuntu/.kube/config
 
@@ -95,5 +105,5 @@ aws ssm put-parameter \
 
 # 11. Deploy CNI
 kubectl --kubeconfig=/etc/kubernetes/admin.conf apply \
-  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/refs/heads/master/config/master/aws-k8s-cni.yaml
 

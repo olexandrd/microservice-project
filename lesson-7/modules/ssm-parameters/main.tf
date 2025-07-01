@@ -22,3 +22,11 @@ resource "aws_ssm_parameter" "ca_cert_hash" {
   value     = "pending"
   overwrite = true
 }
+
+resource "aws_ssm_parameter" "kubeconfig" {
+  name      = "/k8s/admin.conf"
+  type      = "SecureString"
+  value     = "pending"
+  tier      = "Advanced"
+  overwrite = true
+}

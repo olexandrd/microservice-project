@@ -18,11 +18,3 @@ variable "ca_hash_ssm_name" {
 variable "region" {
   type = string
 }
-
-variable "master_private_ip" {
-  type = string
-}
-
-# variable "public_ip" {
-#   type = string
-# }

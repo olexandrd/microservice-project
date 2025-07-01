@@ -84,7 +84,6 @@ resource "aws_instance" "control_plane" {
     ca_hash_ssm_name       = var.ca_hash_ssm_name,
     region                 = var.region,
     pod_network_cidr       = var.pod_network_cidr,
-    public_ip              = aws_instance.control_plane.public_ip
   }))
   tags = {
     Name = "${var.name}-control-plane"

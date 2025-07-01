@@ -1,6 +1,6 @@
 variable "name" { type = string }
 variable "vpc_id" { type = string }
-variable "subnet_id" { type = string }
+variable "subnet_id" { type = list(string) }
 variable "ami" { type = string }
 variable "instance_type" { default = "t4g.medium" }
 variable "worker_count" { default = 2 }
