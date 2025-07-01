@@ -1,0 +1,26 @@
+image:
+  repository: your-registry/your-django-image
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  host: django.stage.fixer.tools
+  path: /
+  pathType: Prefix
+  tls: true
+
+config:
+  POSTGRES_HOST: db
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: django_user
+  POSTGRES_DB: django_db
+  POSTGRES_PASSWORD: pass9764gd  
