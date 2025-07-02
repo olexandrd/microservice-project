@@ -2,14 +2,8 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_ami" "k8s_ubuntu_arm64" {
-  most_recent = true
-  owners      = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-arm64-server-*"]
-  }
+data "aws_ssm_parameter" "al2_arm64" {
+  name = "/aws/service/eks/optimized-ami/1.32/amazon-linux-2023/arm64/standard/recommended/image_id"
 }
 
 # module "s3_backend" {
@@ -56,7 +50,7 @@ module "k8s_control_plane" {
   name                   = var.name
   vpc_id                 = module.vpc.vpc_id
   subnet_id              = module.vpc.public_subnets[0]
-  ami                    = data.aws_ami.k8s_ubuntu_arm64.id
+  ami                    = data.aws_ssm_parameter.al2_arm64.value
   vpc_cidr_block         = module.vpc.vpc_cidr_block
   pod_network_cidr       = "10.0.4.0/22"
   kubeadm_token_ssm_name = module.ssm.token_ssm_name
@@ -73,7 +67,7 @@ module "k8s_worker_nodes" {
   name                   = var.name
   vpc_id                 = module.vpc.vpc_id
   subnet_id              = module.vpc.private_subnets
-  ami                    = data.aws_ami.k8s_ubuntu_arm64.id
+  ami                    = data.aws_ssm_parameter.al2_arm64.value
   vpc_cidr_block         = module.vpc.vpc_cidr_block
   worker_count           = 2
   kubeadm_token_ssm_name = module.ssm.token_ssm_name
