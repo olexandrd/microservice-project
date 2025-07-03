@@ -21,6 +21,26 @@ sudo sysctl --system
 sudo swapoff -a
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab || true
 
+# Install kubeadm and kubectl
+
+sudo mkdir -p /etc/eks/kubelet/
+sudo touch  /etc/eks/kubelet/environment
+sudo touch /etc/sysconfig/kubelet
+
+
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
+EOF
+sudo yum install -y kubeadm kubectl iproute-tc
+
+sudo systemctl enable kubelet.service
+sudo systemctl start kubelet.service
+
 # 4. Wait for CA hash in SSM
 while true; do
   CA_HASH=$(aws ssm get-parameter \

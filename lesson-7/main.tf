@@ -52,7 +52,7 @@ module "k8s_control_plane" {
   subnet_id              = module.vpc.public_subnets[0]
   ami                    = data.aws_ssm_parameter.al2_arm64.value
   vpc_cidr_block         = module.vpc.vpc_cidr_block
-  pod_network_cidr       = "10.0.4.0/22"
+  pod_network_cidr       = "192.168.0.0/16"
   kubeadm_token_ssm_name = module.ssm.token_ssm_name
   ca_hash_ssm_name       = module.ssm.hash_ssm_name
   region                 = var.region
