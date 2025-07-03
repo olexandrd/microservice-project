@@ -78,7 +78,7 @@ chown ec2-user:ec2-user /home/ec2-user/.kube/config
 
 
 # 7. Network (AWS VPC CNI — AL2023 EKS-optimized сам ставить aws-node, але якщо треба вручну):
-sleep 180 && kubectl --kubeconfig=/etc/kubernetes/admin.conf apply \
+sleep 3 && kubectl --kubeconfig=/etc/kubernetes/admin.conf apply \
   -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/calico.yaml
 
 

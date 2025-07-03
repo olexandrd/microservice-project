@@ -10,6 +10,13 @@ resource "aws_security_group" "control_plane" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "K8s API"
   }
+  ingress {
+    from_port   = 179
+    to_port     = 179
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
+    description = "BGP for Calico"
+  }
   egress {
     from_port   = 0
     to_port     = 0

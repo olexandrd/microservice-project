@@ -17,6 +17,13 @@ resource "aws_security_group" "worker" {
     cidr_blocks = [var.vpc_cidr_block]
     description = "NodePort"
   }
+  ingress {
+    from_port   = 179
+    to_port     = 179
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
+    description = "BGP"
+  }
   egress {
     from_port   = 0
     to_port     = 0
