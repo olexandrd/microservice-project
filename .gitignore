@@ -170,3 +170,4 @@ cython_debug/
 **/*.tfvars.json
 **/.terraform*
 **/.DS_Store
+**/*.tgz

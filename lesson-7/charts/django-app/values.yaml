@@ -1,7 +1,7 @@
 image:
   repository: 290480495560.dkr.ecr.us-east-2.amazonaws.com/lesson-7-ecr
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
@@ -19,8 +19,22 @@ ingress:
   tls: true
 
 config:
-  POSTGRES_HOST: db
+  POSTGRES_HOST: django-postgresql
   POSTGRES_PORT: 5432
   POSTGRES_USER: django_user
-  POSTGRES_DB: django_db
-  POSTGRES_PASSWORD: pass9764gd  
+  POSTGRES_NAME: django_db
+  POSTGRES_PASSWORD: pass9764gd
+  ALLOWED_HOSTS: django.stage.fixer.tools
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        postgresPassword: pass9764gd
+        username: django_user
+        database: django_db
+        password: pass9764gd
+  primary:
+    persistence:
+      size: 2Gi
