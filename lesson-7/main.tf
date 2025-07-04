@@ -2,10 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_ssm_parameter" "al2_arm64" {
-  name = "/aws/service/eks/optimized-ami/1.32/amazon-linux-2023/arm64/standard/recommended/image_id"
-}
-
 # module "s3_backend" {
 #   source      = "./modules/s3-backend"
 #   bucket_name = var.bucket_name
@@ -22,13 +18,6 @@ module "vpc" {
   name               = var.name
 }
 
-module "ssm" {
-  source         = "./modules/ssm-parameters"
-  token_length   = 23
-  token_ssm_name = "/k8s/kubeadm_token"
-  hash_ssm_name  = "/k8s/ca_cert_hash"
-}
-
 module "ecr" {
   source       = "./modules/ecr"
   ecr_name     = "lesson-7-ecr"
@@ -38,11 +27,14 @@ module "ecr" {
 module "eks" {
   source        = "./modules/eks"
   cluster_name  = "eks-cluster-demo"
-  subnet_ids    = module.vpc.private_subnets
-  instance_type = "t2.small"
-  desired_size  = 1
-  max_size      = 2
-  min_size      = 1
+  subnet_ids    = module.vpc.public_subnets
+  instance_type = "t3.small"
+  desired_size  = 2
+  max_size      = 3
+  min_size      = 2
+  depends_on = [
+    module.vpc.nat_instance_id
+  ]
 }
 
 
