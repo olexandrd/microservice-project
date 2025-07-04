@@ -10,9 +10,9 @@ resource "aws_iam_role" "eks" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "sts:AssumeRole",  # Дозволяє AssumeRole (використання ролі)
+      "Action": "sts:AssumeRole", 
       "Principal": {
-        "Service": "eks.amazonaws.com"  # Дозволено для сервісу EKS
+        "Service": "eks.amazonaws.com"
       }
     }
   ]

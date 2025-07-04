@@ -15,16 +15,6 @@ output "ecr_url" {
 }
 
 
-output "kubeconfig_instructions" {
-  value     = <<EOT
-Add the following to your kubeconfig file.
-cat > ~/.kube/config <<EOF
-${module.k8s_control_plane.kubeconfig}
-EOF
-EOT
-  sensitive = true
-}
-
 
 
 # output "eks_cluster_endpoint" {

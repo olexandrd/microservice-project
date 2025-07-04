@@ -3,7 +3,6 @@ resource "aws_iam_role" "nodes" {
   # Ім'я ролі для вузлів
   name = "${var.cluster_name}-eks-nodes"
 
-  # Політика, що дозволяє EC2 асумувати роль
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -53,7 +52,7 @@ resource "aws_eks_node_group" "general" {
   subnet_ids = var.subnet_ids
 
   # Тип EC2-інстансів для вузлів
-  capacity_type  = "ON_DEMAND"
+  capacity_type  = "SPOT"
   instance_types = ["${var.instance_type}"]
 
   # Конфігурація масштабування

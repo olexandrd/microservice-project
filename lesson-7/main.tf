@@ -35,47 +35,15 @@ module "ecr" {
   scan_on_push = true
 }
 
-# module "eks" {
-#   source        = "./modules/eks"
-#   cluster_name  = "eks-cluster-demo"
-#   subnet_ids    = module.vpc.public_subnets
-#   instance_type = "t2.micro"
-#   desired_size  = 1
-#   max_size      = 2
-#   min_size      = 1
-# }
-
-module "k8s_control_plane" {
-  source                 = "./modules/low-cost-k8s-control-plane"
-  name                   = var.name
-  vpc_id                 = module.vpc.vpc_id
-  subnet_id              = module.vpc.public_subnets[0]
-  ami                    = data.aws_ssm_parameter.al2_arm64.value
-  vpc_cidr_block         = module.vpc.vpc_cidr_block
-  pod_network_cidr       = "192.168.0.0/16"
-  kubeadm_token_ssm_name = module.ssm.token_ssm_name
-  ca_hash_ssm_name       = module.ssm.hash_ssm_name
-  region                 = var.region
-  depends_on = [
-    module.vpc.nat_instance_id,
-    module.ssm
-  ]
+module "eks" {
+  source        = "./modules/eks"
+  cluster_name  = "eks-cluster-demo"
+  subnet_ids    = module.vpc.private_subnets
+  instance_type = "t2.small"
+  desired_size  = 1
+  max_size      = 2
+  min_size      = 1
 }
 
-module "k8s_worker_nodes" {
-  source                 = "./modules/low-cost-k8s-worker-nodes"
-  name                   = var.name
-  vpc_id                 = module.vpc.vpc_id
-  subnet_id              = module.vpc.private_subnets
-  ami                    = data.aws_ssm_parameter.al2_arm64.value
-  vpc_cidr_block         = module.vpc.vpc_cidr_block
-  worker_count           = 2
-  kubeadm_token_ssm_name = module.ssm.token_ssm_name
-  ca_hash_ssm_name       = module.ssm.hash_ssm_name
-  master_private_ip      = module.k8s_control_plane.control_plane_private_ip
-  region                 = var.region
-  depends_on = [
-    module.vpc.nat_instance_id,
-    module.k8s_control_plane.control_plane_private_ip
-  ]
-}
+
+
