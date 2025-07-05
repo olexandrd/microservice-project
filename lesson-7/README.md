@@ -108,6 +108,12 @@ helm install cert-manager jetstack/cert-manager \
     installCRDs=true
 ```
 
+For HPA (Horizontal Pod Autoscaler) to work correctly, we need to enable the metrics server in the cluster.
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
 ## Deploy Django application using Helm
 
 As we use PostgreSQL as a database, we need to download helm dependencies first by `dependency build`.
