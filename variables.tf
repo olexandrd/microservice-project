@@ -27,3 +27,24 @@ variable "cluster_name" {
   description = "Name of the EKS cluster"
   default     = "example-eks-cluster"
 }
+
+variable "github_username" {
+  description = "GitHub username for Jenkins"
+  type        = string
+}
+
+variable "github_token" {
+  description = "GitHub token for Jenkins"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_repo_url" {
+  description = "GitHub repository URL for Jenkins"
+  type        = string
+}
+
+variable "github_branch" {
+  description = "GitHub branch for Jenkins"
+  type        = string
+}

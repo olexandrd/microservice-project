@@ -6,8 +6,14 @@ data "aws_eks_cluster_auth" "eks" {
   name = var.cluster_name
 }
 
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.eks.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.eks.token
+}
+
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = data.aws_eks_cluster.eks.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.eks.token
@@ -54,11 +60,18 @@ module "eks" {
 }
 
 module "jenkins" {
-  source       = "./modules/jenkins"
-  cluster_name = module.eks.eks_cluster_name
-
+  source            = "./modules/jenkins"
+  github_repo_url   = var.github_repo_url
+  github_username   = var.github_username
+  github_token      = var.github_token
+  github_branch     = var.github_branch
+  cluster_name      = module.eks.eks_cluster_name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = module.eks.oidc_provider_url
   providers = {
     helm = helm
   }
+  depends_on = [
+    module.eks
+  ]
 }
-

@@ -19,8 +19,8 @@ controller:
 
   persistentVolume:
     enabled: true
-    storageClass: ""
-    size: 10Gi
+    storageClass: "ebs-sc"
+    size: 8Gi
 
   installPlugins:
     - kubernetes:latest
@@ -29,4 +29,60 @@ controller:
     - configuration-as-code:latest
     - credentials-binding:latest
     - github:latest
+    - docker-plugin:latest
+    - docker-workflow:latest
+    - job-dsl:latest
 
+  serviceAccount:
+     name: jenkins-sa
+     create: false
+
+  JCasC:
+    configScripts:
+      credentials: |
+        credentials:
+          system:
+            domainCredentials:
+              - credentials:
+                  - usernamePassword:
+                      scope: GLOBAL
+                      id: github-token
+                      username: ${github_username}
+                      password: ${github_token}
+                      description: GitHub PAT
+      seed-job: |
+        jobs:
+          - script: >
+              job('seed-job') {
+                description('Job to generate pipeline for Django project')
+                scm {
+                  git {
+                    remote {
+                      url("${github_repo_url}")
+                      credentials('github-token')
+                    }
+                    branches('*/main')
+                  }
+                }
+                steps {
+                  dsl {
+                    text('''
+                      pipelineJob("goit-django-docker") {
+                        definition {
+                          cpsScm {
+                            scm {
+                              git {
+                                remote {
+                                  url("${github_repo_url}")
+                                  credentials("github-token")
+                                }
+                                branches("*/${github_branch}")
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ''')
+                  }
+                }
+              }
