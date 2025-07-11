@@ -31,6 +31,7 @@ variable "cluster_name" {
 variable "github_username" {
   description = "GitHub username for Jenkins"
   type        = string
+  default     = "olexandrd"
 }
 
 variable "github_token" {
@@ -42,9 +43,11 @@ variable "github_token" {
 variable "github_repo_url" {
   description = "GitHub repository URL for Jenkins"
   type        = string
+  default     = "https://github.com/olexandrd/microservice-project.git"
 }
 
 variable "github_branch" {
   description = "GitHub branch for Jenkins"
   type        = string
+  default     = "lesson-8-9"
 }
