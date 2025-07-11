@@ -22,3 +22,8 @@ variable "name" {
   type        = string
   default     = "django-app"
 }
+
+variable "cluster_name" {
+  description = "Name of the EKS cluster"
+  default     = "example-eks-cluster"
+}
