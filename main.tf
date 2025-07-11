@@ -1,3 +1,20 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.0.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.0.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0.0"
+    }
+  }
+}
+
 data "aws_eks_cluster" "eks" {
   name = var.cluster_name
 }
@@ -42,7 +59,7 @@ module "vpc" {
 
 module "ecr" {
   source       = "./modules/ecr"
-  ecr_name     = "lesson-7-ecr"
+  ecr_name     = "app"
   scan_on_push = true
 }
 
@@ -68,10 +85,14 @@ module "jenkins" {
   cluster_name      = module.eks.eks_cluster_name
   oidc_provider_arn = module.eks.oidc_provider_arn
   oidc_provider_url = module.eks.oidc_provider_url
-  providers = {
-    helm = helm
-  }
   depends_on = [
     module.eks
   ]
+}
+
+module "argo_cd" {
+  source        = "./modules/argo_cd"
+  namespace     = "argocd"
+  chart_version = "8.1.3"
+  depends_on    = [module.eks]
 }

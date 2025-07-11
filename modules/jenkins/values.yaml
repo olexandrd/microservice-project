@@ -67,7 +67,7 @@ controller:
                 steps {
                   dsl {
                     text('''
-                      pipelineJob("goit-django-docker") {
+                      pipelineJob("django-docker") {
                         definition {
                           cpsScm {
                             scm {

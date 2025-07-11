@@ -1,0 +1,5 @@
+apiVersion: v2
+name: argo-apps
+version: 0.1.0
+description: Deploy Argo CD Applications and Repositories
+

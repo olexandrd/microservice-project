@@ -68,27 +68,7 @@ To configure your local `kubectl` to connect to the EKS cluster, run the followi
 aws eks --region us-east-2 update-kubeconfig --name $EKS_CLUSTER_NAME
 ```
 
-As we are using PostgreSQL as a database, we need to create a storage class for EBS volumes.
-AWS EBS CSI driver is already added using Terraform.
-
-```sh
-kubectl apply -f - <<EOF
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: ebs-sc
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: ebs.csi.aws.com
-parameters:
-  type: gp3
-reclaimPolicy: Delete
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
-EOF
-```
-
-Besides the storage class, we also need to install the NGINX Ingress Controller and Cert Manager for managing TLS certificates.
+We need to install the NGINX Ingress Controller.
 
 ```sh
 # Install NGINX Ingress Controller
@@ -99,13 +79,6 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
   --create-namespace \
   --set controller.publishService.enabled=true
 
-# Install Cert Manager
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-helm install cert-manager jetstack/cert-manager \
-    --namespace cert-manager \
-    --create-namespace --set \
-    installCRDs=true
 ```
 
 For HPA (Horizontal Pod Autoscaler) to work correctly, we need to enable the metrics server in the cluster.
