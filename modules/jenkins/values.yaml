@@ -70,11 +70,13 @@ controller:
                       pipelineJob("django-docker") {
                         definition {
                           cpsScm {
+                            scriptPath('django/Jenkinsfile')
                             scm {
                               git {
                                 remote {
                                   url("${github_repo_url}")
                                   credentials("github-token")
+                                  
                                 }
                                 branches("*/${github_branch}")
                               }
