@@ -1,5 +1,18 @@
 # Application Deployment with CD Pipeline
 
+## Table of Contents
+
+- [Application Deployment with CD Pipeline](#application-deployment-with-cd-pipeline)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Steps to set up the environment](#steps-to-set-up-the-environment)
+  - [RDS Configuration](#rds-configuration)
+  - [Access to CD pipeline](#access-to-cd-pipeline)
+  - [Build and push Docker image to ECR](#build-and-push-docker-image-to-ecr)
+  - [Configure cluster](#configure-cluster)
+  - [Argo CD integration](#argo-cd-integration)
+  - [Deploy Django application](#deploy-django-application)
+
 This directory contains the source code and resources for homework 8 and 9, focusing on setup CD pipeline.
 
 *Disclaimer: NAT instance is used for outbound internet access instead of an AWS NAT Gateway for the
@@ -44,6 +57,8 @@ terraform plan
 terraform apply
 
 ```
+
+## RDS Configuration
 
 ## Access to CD pipeline
 
