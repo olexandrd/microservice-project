@@ -58,17 +58,18 @@ spec:
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
-              git clone <https://$GIT_USERNAME:$GIT_PAT@github.com/olexandrd/microservice-project.git>
-              cd microservice-project/django-chart
+              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/olexandrd/microservice-project.git -b lesson-8-9
+              set -x
+              cd microservice-project/charts/django-app
 
-              sed -i "s/tag: .*/tag: $IMAGE_TAG/" values.yaml
+              sed -i \"s/tag: .*/tag: $IMAGE_TAG/\" values.yaml
 
               git config user.email "$COMMIT_EMAIL"
               git config user.name "$COMMIT_NAME"
 
               git add values.yaml
               git commit -m "Update image tag to $IMAGE_TAG"
-              git push origin cd
+              git push -f origin cd
             '''
           }
         }
