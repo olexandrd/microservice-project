@@ -1,6 +1,6 @@
 image:
   repository: 290480495560.dkr.ecr.us-east-2.amazonaws.com/app
-  tag: latest
+  tag: v1.0.2
   pullPolicy: Always
 
 service:
