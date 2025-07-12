@@ -68,25 +68,6 @@ To configure your local `kubectl` to connect to the EKS cluster, run the followi
 aws eks --region us-east-2 update-kubeconfig --name $EKS_CLUSTER_NAME
 ```
 
-We need to install the NGINX Ingress Controller.
-
-```sh
-# Install NGINX Ingress Controller
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx \
-  --create-namespace \
-  --set controller.publishService.enabled=true
-
-```
-
-For HPA (Horizontal Pod Autoscaler) to work correctly, we need to enable the metrics server in the cluster.
-
-```sh
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-```
-
 ## Deploy Django application using Helm
 
 As we use PostgreSQL as a database, we need to download helm dependencies first by `dependency build`.

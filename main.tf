@@ -78,6 +78,13 @@ module "eks" {
   ]
 }
 
+module "k8s_bootstrap" {
+  source = "./modules/k8s_bootstrap"
+  depends_on = [
+    module.eks
+  ]
+}
+
 module "jenkins" {
   source            = "./modules/jenkins"
   github_repo_url   = var.github_repo_url
