@@ -66,6 +66,8 @@ To configure your local `kubectl` to connect to the EKS cluster, run the followi
 
 ```sh
 aws eks --region us-east-2 update-kubeconfig --name $EKS_CLUSTER_NAME
+# or
+aws eks --region us-east-2 update-kubeconfig --name eks-cluster-demo
 ```
 
 ## Deploy Django application using Helm
@@ -87,3 +89,9 @@ But setting up domain is out of scope for this task.
 You can use your own domain instead of `django.stage.fixer.tools` and point it to the Load Balancer
 that is created during your Helm chart deployment
 (helm install ... --set ingress.host=your_domain).*
+
+## Argo CD integration
+
+```sh
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```

@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0.0"
+    }
+  }
+}
 resource "kubernetes_storage_class_v1" "ebs_sc" {
   metadata {
     name = "ebs-sc"
@@ -149,6 +157,8 @@ resource "aws_iam_role_policy" "jenkins_ecr_policy" {
 resource "helm_release" "jenkins" {
   name             = "jenkins"
   namespace        = "jenkins"
+  replace          = true
+  force_update     = true
   repository       = "https://charts.jenkins.io"
   chart            = "jenkins"
   version          = "5.8.27"

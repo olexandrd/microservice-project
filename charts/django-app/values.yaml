@@ -1,5 +1,5 @@
 image:
-  repository: 290480495560.dkr.ecr.us-east-2.amazonaws.com/lesson-7-ecr
+  repository: 290480495560.dkr.ecr.us-east-2.amazonaws.com/app
   tag: latest
   pullPolicy: Always
 

@@ -29,6 +29,7 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.eks.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.eks.token
+  # config_path            = "~/.kube/config"
 }
 
 provider "helm" {
@@ -69,9 +70,9 @@ module "eks" {
   source        = "./modules/eks"
   cluster_name  = "eks-cluster-demo"
   subnet_ids    = module.vpc.public_subnets
-  instance_type = "t3.small"
+  instance_type = "t3.medium"
   desired_size  = 2
-  max_size      = 3
+  max_size      = 4
   min_size      = 2
   depends_on = [
     module.vpc.nat_instance_id
@@ -97,6 +98,9 @@ module "jenkins" {
   depends_on = [
     module.eks
   ]
+  providers = {
+    kubernetes = kubernetes
+  }
 }
 
 module "argo_cd" {
