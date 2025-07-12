@@ -1,0 +1,27 @@
+argocd-apps:
+  applications:
+    example-app: 
+      namespace: argocd
+      project: default
+      source:
+        repoURL: https://github.com/olexandrd/microservice-project.git
+        path: charts/django-app
+        targetRevision: cd
+        helm:
+          valueFiles:
+            - values.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+  repositories:
+    example-app:
+      url: https://github.com/olexandrd/microservice-project.git
+
+  repoConfig:
+    insecure: "true"
+    enableLfs: "true"
