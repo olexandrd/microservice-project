@@ -1,4 +1,4 @@
-# Lesson 7: Helm Chart Deployment
+# Application Deployment with CD Pipeline
 
 This directory contains the source code and resources for homework 8 and 9, focusing on setup CD pipeline.
 
