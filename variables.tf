@@ -86,6 +86,12 @@ variable "rds_multi_az" {
   default     = true
 }
 
+variable "rds_instance_class" {
+  description = "Instance class for the RDS database"
+  type        = string
+  default     = "db.t4g.medium"
+}
+
 variable "rds_backup_retention_period" {
   description = "Backup retention period for the RDS database"
   type        = string

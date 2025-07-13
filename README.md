@@ -108,8 +108,11 @@ You can configure the RDS module using the following variables in `terraform.tfv
 rds_publicly_accessible = true # false for private access
 rds_use_aurora = true # false for standard RDS instance
 rds_multi_az = false # true for multi-AZ deployment
+rds_instance_class = "db.t3.medium" # Instance class for RDS
 rds_backup_retention_period = "0" # Set to "0" for no backups, or specify the number of days for backups
 ```
+
+Database engine and version can be configured in the  [main.tf](main.tf#L114) file.
 
 #### CLI options
 
@@ -119,7 +122,8 @@ You can also configure the RDS module using command-line options when running Te
 terraform apply -target=module.rds \
   -var="rds_publicly_accessible=true" \
   -var="rds_use_aurora=false" \
-  -var="rds_multi_az=false" 
+  -var="rds_multi_az=false" \
+  -var="rds_instance_class=db.t4g.medium"
 ```
 
 ### RDS setup examples

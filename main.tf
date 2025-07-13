@@ -131,7 +131,7 @@ module "rds" {
   parameter_group_family_rds = "postgres17"
 
   # Common
-  instance_class          = "db.t4g.medium"
+  instance_class          = var.rds_instance_class
   allocated_storage       = 20
   db_name                 = var.rds_database_name
   username                = var.rds_username
