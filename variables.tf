@@ -49,6 +49,12 @@ variable "github_branch" {
   type        = string
 }
 
+variable "rds_use_aurora" {
+  description = "Use Aurora for the RDS database"
+  type        = bool
+  default     = true
+}
+
 variable "rds_username" {
   description = "Username for the RDS database"
   type        = string
@@ -59,4 +65,29 @@ variable "rds_password" {
   description = "Password for the RDS database"
   type        = string
   sensitive   = true
-} 
+}
+
+variable "rds_database_name" {
+  description = "Name of the RDS database"
+  type        = string
+  default     = "myapp"
+
+}
+
+variable "rds_publicly_accessible" {
+  description = "Whether the RDS database should be publicly accessible"
+  type        = bool
+  default     = false
+}
+
+variable "rds_multi_az" {
+  description = "Enable Multi-AZ for the RDS database"
+  type        = bool
+  default     = true
+}
+
+variable "rds_backup_retention_period" {
+  description = "Backup retention period for the RDS database"
+  type        = string
+  default     = "7"
+}

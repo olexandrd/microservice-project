@@ -1,6 +1,6 @@
 # Subnet group (used by both)
 resource "aws_db_subnet_group" "default" {
-  name       = "${var.name}-subnet-group"
+  name       = "${var.name}-subnet-group-${var.publicly_accessible ? "public" : "private"}"
   subnet_ids = var.publicly_accessible ? var.subnet_public_ids : var.subnet_private_ids
   tags       = var.tags
 }

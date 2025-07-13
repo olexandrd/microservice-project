@@ -115,7 +115,7 @@ module "rds" {
   source = "./modules/rds"
 
   name                  = "${var.name}-db"
-  use_aurora            = true
+  use_aurora            = var.rds_use_aurora
   aurora_instance_count = 2
   vpc_cidr_block        = module.vpc.vpc_cidr_block
 
@@ -131,17 +131,17 @@ module "rds" {
   parameter_group_family_rds = "postgres17"
 
   # Common
-  instance_class          = "db.t3.medium"
+  instance_class          = "db.t4g.medium"
   allocated_storage       = 20
-  db_name                 = "myapp"
+  db_name                 = var.rds_database_name
   username                = var.rds_username
   password                = var.rds_password
   subnet_private_ids      = module.vpc.private_subnets
   subnet_public_ids       = module.vpc.public_subnets
-  publicly_accessible     = true
+  publicly_accessible     = var.rds_publicly_accessible
   vpc_id                  = module.vpc.vpc_id
-  multi_az                = true
-  backup_retention_period = 7
+  multi_az                = var.rds_multi_az
+  backup_retention_period = var.rds_backup_retention_period
   parameters = {
     max_connections            = "200"
     log_min_duration_statement = "500"
@@ -152,7 +152,7 @@ module "rds" {
     Project     = var.name
   }
   depends_on = [
-    module.vpc.nat_instance_id
+    module.vpc
   ]
 }
 

@@ -14,9 +14,6 @@ output "ecr_url" {
   value       = module.ecr.ecr_url
 }
 
-
-
-
 output "eks_cluster_endpoint" {
   description = "EKS API endpoint for connecting to the cluster"
   value       = module.eks.eks_cluster_endpoint
@@ -38,4 +35,9 @@ output "jenkins_release" {
 
 output "jenkins_namespace" {
   value = module.jenkins.jenkins_namespace
+}
+
+output "rds_endpoint" {
+  description = "RDS endpoint for connecting to the database"
+  value       = module.rds.rds_endpoint
 }
