@@ -58,7 +58,7 @@ spec:
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
-              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/olexandrd/microservice-project.git -b lesson-8-9
+              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/olexandrd/microservice-project.git -b main
               set -x 
               cd microservice-project
               git checkout -b cd
