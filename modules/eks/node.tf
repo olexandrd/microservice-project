@@ -49,7 +49,7 @@ resource "aws_eks_node_group" "general" {
   node_role_arn = aws_iam_role.nodes.arn
 
   # Підмережі, де будуть EC2-вузли
-  subnet_ids = var.subnet_ids
+  subnet_ids = var.node_subnet_ids
 
   # Тип EC2-інстансів для вузлів
   capacity_type  = "SPOT"

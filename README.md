@@ -1,6 +1,24 @@
 # Application Deployment with CD Pipeline
 
-This directory contains the source code and resources for homework 8 and 9, focusing on setup CD pipeline.
+## Table of Contents
+
+- [Application Deployment with CD Pipeline](#application-deployment-with-cd-pipeline)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Steps to set up the environment](#steps-to-set-up-the-environment)
+  - [RDS Configuration](#rds-configuration)
+    - [Basic usage](#basic-usage)
+    - [RDS configuration options](#rds-configuration-options)
+      - [Configuration file](#configuration-file)
+      - [CLI options](#cli-options)
+    - [RDS setup examples](#rds-setup-examples)
+  - [Access to CD pipeline](#access-to-cd-pipeline)
+  - [Build and push Docker image to ECR](#build-and-push-docker-image-to-ecr)
+  - [Configure cluster](#configure-cluster)
+  - [Argo CD integration](#argo-cd-integration)
+  - [Deploy Django application](#deploy-django-application)
+
+This directory contains the source code and resources for deploying demo applications on EKS.
 
 *Disclaimer: NAT instance is used for outbound internet access instead of an AWS NAT Gateway for the
 cost savings.
@@ -20,6 +38,23 @@ that is created during your Helm chart deployment
 - Helm installed
 - Docker installed
 - Terraform installed
+
+Optionally, you can add `terraform.tfvars` file to the root directory of the project.
+
+This file can contain the following variables:
+
+```hcl
+github_repo_url = "https://github.com/olexandrd/microservice-project.git"
+github_branch = "your_branch_name"
+github_username = "your_github_username"
+github_token = "pat_token_here"
+
+rds_password = "password_here"
+rds_publicly_accessible = true
+rds_use_aurora = true
+rds_multi_az = false
+rds_backup_retention_period = "0"
+```
 
 ## Steps to set up the environment
 
@@ -45,6 +80,104 @@ terraform apply
 
 ```
 
+## RDS Configuration
+
+Module `modules/rds` can be used to create RDS, including both standard RDS instances and Aurora clusters.
+
+Database password setting `rds_password` can be set in the `terraform.tfvars` file, passed using prompt during the Terraform apply command or passed as an environment variable.
+
+### Basic usage
+
+To create a standard Aurora cluster without public access, you can use the following command:
+
+```sh
+terraform apply -target=module.rds
+```
+
+![alt text](docs/img/aurora-01.png)
+
+### RDS configuration options
+
+You can configure the RDS module using the following variables in `terraform.tfvars` or as command-line options.
+
+#### Configuration file
+
+You can configure the RDS module using the following variables in `terraform.tfvars`:
+
+```hcl
+rds_publicly_accessible = true # false for private access
+rds_use_aurora = true # false for standard RDS instance
+rds_multi_az = false # true for multi-AZ deployment
+rds_instance_class = "db.t3.medium" # Instance class for RDS
+rds_backup_retention_period = "0" # Set to "0" for no backups, or specify the number of days for backups
+```
+
+Database engine and version can be configured using the following variables:
+
+```hcl
+rds_aurora_engine = "aurora-postgresql" # Engine for Aurora cluster
+rds_aurora_engine_version = "15.3" # Version for Aurora cluster
+rds_aurora_parameter_group_family = "aurora-postgresql15" # Parameter group family for Aurora cluster 
+rds_instance_engine = "postgres" # Engine for standard RDS instance
+rds_instance_engine_version = "17.2" # Version for standard RDS instance
+rds_instance_parameter_group_family = "postgres17" # Parameter group family for standard RDS instance
+rds_instance_class = "db.t4g.medium" # Instance class for standard RDS instance
+```
+
+#### CLI options
+
+You can also configure the RDS module using command-line options when running Terraform:
+
+```sh
+terraform apply -target=module.rds \
+  -var="rds_publicly_accessible=true" \
+  -var="rds_use_aurora=false" \
+  -var="rds_multi_az=false" \
+  -var="rds_instance_class=db.t4g.medium"
+```
+
+### RDS setup examples
+
+- Aurora cluster with public access:
+
+```sh
+terraform apply -target=module.rds \
+  -var="rds_publicly_accessible=true" \
+  -var="rds_use_aurora=true" 
+```
+
+![alt text](docs/img/aurora-02.png)
+
+- Aurora cluster on private subnets:
+
+```sh
+terraform apply -target=module.rds \
+  -var="rds_publicly_accessible=false" \
+  -var="rds_use_aurora=true"
+```
+
+![alt text](docs/img/aurora-03.png)
+
+- Standard RDS instance with public access:
+
+```sh
+terraform apply -target=module.rds \
+  -var="rds_publicly_accessible=true" \
+  -var="rds_use_aurora=false"
+```
+
+![alt text](docs/img/rds-01.png)
+
+- Standard RDS instance on private subnets:
+
+```sh
+terraform apply -target=module.rds \
+  -var="rds_publicly_accessible=false" \
+  -var="rds_use_aurora=false"
+```
+
+![alt text](docs/img/rds-02.png)
+
 ## Access to CD pipeline
 
 Needed endpoints, Jenkins and ArgoCD, can be found on the AWS console, under EC2 Load Balancers.
@@ -66,8 +199,6 @@ Example:
 To configure your local `kubectl` to connect to the EKS cluster, run the following command:
 
 ```sh
-aws eks --region us-east-2 update-kubeconfig --name $EKS_CLUSTER_NAME
-# or
 aws eks --region us-east-2 update-kubeconfig --name eks-cluster-demo
 ```
 
