@@ -97,3 +97,39 @@ variable "rds_backup_retention_period" {
   type        = string
   default     = "7"
 }
+
+variable "rds_aurora_engine" {
+  description = "Engine for Aurora RDS"
+  type        = string
+  default     = "aurora-postgresql"
+}
+
+variable "rds_aurora_engine_version" {
+  description = "Engine version for Aurora RDS"
+  type        = string
+  default     = "15.3"
+}
+
+variable "rds_aurora_parameter_group_family" {
+  description = "Parameter group family for Aurora RDS"
+  type        = string
+  default     = "aurora-postgresql15"
+}
+
+variable "rds_instance_engine" {
+  description = "Engine for standard RDS instance"
+  type        = string
+  default     = "postgres"
+}
+
+variable "rds_instance_engine_version" {
+  description = "Engine version for standard RDS instance"
+  type        = string
+  default     = "17.2"
+}
+
+variable "rds_instance_parameter_group_family" {
+  description = "Parameter group family for standard RDS instance"
+  type        = string
+  default     = "postgres17"
+}

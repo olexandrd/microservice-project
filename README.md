@@ -112,7 +112,17 @@ rds_instance_class = "db.t3.medium" # Instance class for RDS
 rds_backup_retention_period = "0" # Set to "0" for no backups, or specify the number of days for backups
 ```
 
-Database engine and version can be configured in the  [main.tf](main.tf#L114) file.
+Database engine and version can be configured using the following variables:
+
+```hcl
+rds_aurora_engine = "aurora-postgresql" # Engine for Aurora cluster
+rds_aurora_engine_version = "15.3" # Version for Aurora cluster
+rds_aurora_parameter_group_family = "aurora-postgresql15" # Parameter group family for Aurora cluster 
+rds_instance_engine = "postgres" # Engine for standard RDS instance
+rds_instance_engine_version = "17.2" # Version for standard RDS instance
+rds_instance_parameter_group_family = "postgres17" # Parameter group family for standard RDS instance
+rds_instance_class = "db.t4g.medium" # Instance class for standard RDS instance
+```
 
 #### CLI options
 

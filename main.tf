@@ -120,15 +120,15 @@ module "rds" {
   vpc_cidr_block        = module.vpc.vpc_cidr_block
 
   # --- Aurora-only ---
-  engine_cluster                = "aurora-postgresql"
-  engine_version_cluster        = "15.3"
-  parameter_group_family_aurora = "aurora-postgresql15"
+  engine_cluster                = var.rds_aurora_engine
+  engine_version_cluster        = var.rds_aurora_engine_version
+  parameter_group_family_aurora = var.rds_aurora_parameter_group_family
 
 
   # --- RDS-only ---
-  engine                     = "postgres"
-  engine_version             = "17.2"
-  parameter_group_family_rds = "postgres17"
+  engine                     = var.rds_instance_engine
+  engine_version             = var.rds_instance_engine_version
+  parameter_group_family_rds = var.rds_instance_parameter_group_family
 
   # Common
   instance_class          = var.rds_instance_class
