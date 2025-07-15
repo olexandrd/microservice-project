@@ -10,6 +10,12 @@ argocd-apps:
         helm:
           valueFiles:
             - values.yaml
+          values: |
+            config:
+              POSTGRES_HOST: "${rds_endpoint}"
+              POSTGRES_USER: "${rds_username}"
+              POSTGRES_NAME: "${rds_db_name}"
+              POSTGRES_PASSWORD: "${rds_password}"
       destination:
         server: https://kubernetes.default.svc
         namespace: default
