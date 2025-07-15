@@ -17,7 +17,7 @@ locals {
   rds_host = split(":", var.rds_endpoint)[0]
 
   rendered_values = templatefile("${path.module}/charts/values.tpl", {
-    rds_host     = rds_host
+    rds_host     = locals.rds_host
     rds_username = var.rds_username
     rds_db_name  = var.rds_db_name
     rds_password = var.rds_password
