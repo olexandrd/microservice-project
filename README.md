@@ -19,6 +19,7 @@
   - [Argo CD integration](#argo-cd-integration)
   - [Deploy Django application](#deploy-django-application)
   - [Monitoring](#monitoring)
+  - [Application](#application)
 
 This directory contains the source code and resources for deploying demo applications on EKS.
 
@@ -352,3 +353,14 @@ It includes Prometheus, Grafana with common dashboards, Alertmanager and node ex
 For verifying monitoring setup, we can open Grafana in the browser.
 ![alt text](docs/img/grafana-01.png)
 ![alt text](docs/img/grafana-02.png)
+
+## Application
+
+The application is a simple Django project that can be accessed via the Load Balancer URL or by
+using kubectl port-forward command as described above.
+The application is deployed using helm chart that supports the following features:
+
+- Database connection parameters are passed to the application via environment variables.
+- Chart supports RDS or [standalone PostgreSQL deployed as dependency](charts/django-app/values.yaml#L30).
+- Application has [HPA](charts/django-app/templates/hpa.yaml) enabled.
+  
