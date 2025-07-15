@@ -12,7 +12,7 @@ argocd-apps:
             - values.yaml
           values: |
             config:
-              POSTGRES_HOST: "${rds_endpoint}"
+              POSTGRES_HOST: "${rds_host}"
               POSTGRES_USER: "${rds_username}"
               POSTGRES_NAME: "${rds_db_name}"
               POSTGRES_PASSWORD: "${rds_password}"
