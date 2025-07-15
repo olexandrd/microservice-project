@@ -33,14 +33,80 @@ resource "kubernetes_service_account" "jenkins_sa" {
     helm_release.jenkins
   ]
 }
+
 locals {
-  rendered_values = templatefile("${path.module}/values.tpl", {
-    github_username = var.github_username
-    github_token    = var.github_token
-    github_repo_url = var.github_repo_url
-    github_branch   = var.github_branch
-  })
+  file_values = yamldecode(file("${path.module}/values.yaml"))
+  dynamic_scripts = {
+    credentials = <<-EOT
+      credentials:
+        system:
+          domainCredentials:
+            - credentials:
+                - usernamePassword:
+                    scope: GLOBAL
+                    id: github-token
+                    username: ${var.github_username}
+                    password: ${var.github_token}
+                    description: GitHub PAT
+    EOT
+    "seed-job"  = <<-EOT
+      jobs:
+        - script: >
+            job('seed-job') {
+              description('Job to generate pipeline for Django project')
+              scm {
+                git {
+                  remote {
+                    url("${var.github_repo_url}")
+                    credentials('github-token')
+                  }
+                  branches("*/${var.github_branch}")
+                }
+              }
+              steps {
+                dsl {
+                  text('''
+                    pipelineJob("django-docker") {
+                      definition {
+                        cpsScm {
+                          scriptPath('django/Jenkinsfile')
+                          scm {
+                            git {
+                              remote {
+                                url("${var.github_repo_url}")
+                                credentials("github-token")
+                              }
+                              branches("*/${var.github_branch}")
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ''')
+                }
+              }
+            }
+    EOT
+  }
+  jcasc_block = merge(
+    {
+      configScripts = local.dynamic_scripts
+    }
+  )
+  controller_with_jcasc = merge(
+    try(local.file_values.controller, {}),
+    {
+      JCasC = local.jcasc_block
+    }
+  )
+  all_values = merge(
+    local.file_values,
+    {
+      controller = local.controller_with_jcasc
+    }
+  )
 }
+
 
 resource "aws_iam_role" "jenkins_kaniko_role" {
   name = "${var.cluster_name}-jenkins-kaniko-role"
@@ -97,6 +163,5 @@ resource "helm_release" "jenkins" {
   chart            = "jenkins"
   version          = "5.8.27"
   create_namespace = true
-  values           = [local.rendered_values]
+  values           = [yamlencode(local.all_values)]
 }
-
