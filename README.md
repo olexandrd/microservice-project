@@ -354,6 +354,10 @@ For verifying monitoring setup, we can open Grafana in the browser.
 ![alt text](docs/img/grafana-01.png)
 ![alt text](docs/img/grafana-02.png)
 
+Additional dashboards can be imported from the Grafana dashboard repository.
+Also, additional exporters can be installed and configured
+to monitor more services, depending on your needs.
+
 ## Application
 
 The application is a simple Django project that can be accessed via the Load Balancer URL or by
