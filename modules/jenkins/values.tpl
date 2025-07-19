@@ -20,7 +20,7 @@
   persistentVolume:
     enabled: true
     storageClass: "ebs-sc"
-    size: 10Gi
+    size: 8Gi
 
   installPlugins:
     - kubernetes:latest
