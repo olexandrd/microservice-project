@@ -21,9 +21,9 @@ ingress:
 config:
   POSTGRES_HOST: django-postgresql 
   POSTGRES_PORT: 5432
-  POSTGRES_USER: django_user &postgres_user
-  POSTGRES_NAME: django_db &postgres_name
-  POSTGRES_PASSWORD: pass9764gd &postgres_password
+  POSTGRES_USER: django_user
+  POSTGRES_NAME: django_db
+  POSTGRES_PASSWORD: pass9764gd
   ALLOWED_HOSTS: django.stage.fixer.tools
 
 postgresql:
@@ -31,10 +31,10 @@ postgresql:
   global:
     postgresql:
       auth:
-        postgresPassword: *postgres_password
-        username: *postgres_user
-        database: *postgres_name
-        password: *postgres_password
+        postgresPassword: pass9764gd
+        username: django_user
+        database: django_db
+        password: pass9764gd
   primary:
     persistence:
       size: 2Gi
