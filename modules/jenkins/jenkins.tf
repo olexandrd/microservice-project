@@ -154,6 +154,15 @@ resource "aws_iam_role_policy" "jenkins_ecr_policy" {
   })
 }
 
+locals {
+  rendered_chart_values = templatefile("${path.module}/values.tpl", {
+    github_username = var.github_username,
+    github_token    = var.github_token,
+    github_repo_url = var.github_repo_url,
+    github_branch   = var.github_branch,
+  })
+}
+
 resource "helm_release" "jenkins" {
   name             = "jenkins"
   namespace        = "jenkins"
@@ -163,5 +172,6 @@ resource "helm_release" "jenkins" {
   chart            = "jenkins"
   version          = "5.8.27"
   create_namespace = true
-  values           = [yamlencode(local.all_values)]
+  # values           = [yamlencode(local.all_values)]
+  values = [local.rendered_chart_values]
 }
