@@ -38,9 +38,3 @@ controller:
      create: false
   JCasC:
     configScripts:
-      script-approval: |
-        unclassified:
-          scriptApproval:
-            approvedSignatures:
-              - "new javaposse.jobdsl.dsl.DslScriptLoader java.lang.String java.lang.ClassLoader"
-              - "method org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition create org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition"

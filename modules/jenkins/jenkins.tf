@@ -165,4 +165,3 @@ resource "helm_release" "jenkins" {
   create_namespace = true
   values           = [yamlencode(local.all_values)]
 }
-

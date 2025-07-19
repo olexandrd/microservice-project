@@ -13,15 +13,24 @@ resource "helm_release" "argo_cd" {
   create_namespace = true
 }
 
+locals {
+  rds_host = split(":", var.rds_endpoint)[0]
+
+  rendered_values = templatefile("${path.module}/charts/values.tpl", {
+    rds_host     = local.rds_host
+    rds_username = var.rds_username
+    rds_db_name  = var.rds_db_name
+    rds_password = var.rds_password
+  })
+}
+
 resource "helm_release" "argo_apps" {
   name             = "${var.name}-apps"
   chart            = "${path.module}/charts"
   namespace        = var.namespace
   create_namespace = false
 
-  values = [
-    file("${path.module}/charts/values.yaml")
-  ]
+  values     = [local.rendered_values]
   depends_on = [helm_release.argo_cd]
 }
 
