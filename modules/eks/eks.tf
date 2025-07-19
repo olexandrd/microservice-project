@@ -1,3 +1,11 @@
+data "aws_caller_identity" "current" {}
+
+resource "aws_eks_access_entry" "eks_root_admin" {
+  cluster_name  = aws_eks_cluster.eks.name
+  principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+  type          = "STANDARD"
+}
+
 resource "aws_iam_role" "eks" {
   name               = "${var.cluster_name}-eks-cluster"
   assume_role_policy = <<POLICY
@@ -40,3 +48,11 @@ resource "aws_eks_cluster" "eks" {
   depends_on = [aws_iam_role_policy_attachment.eks]
 }
 
+resource "aws_eks_access_policy_association" "admin_policy" {
+  cluster_name  = aws_eks_cluster.eks.name
+  principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  access_scope {
+    type = "cluster"
+  }
+}
