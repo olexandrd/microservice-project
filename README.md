@@ -23,6 +23,15 @@
 
 This directory contains the source code and resources for deploying demo applications on EKS.
 
+## Documentation
+
+Structured documentation is available in [`docs/README.md`](docs/README.md):
+
+- [`docs/architecture.md`](docs/architecture.md) - platform architecture and CI/CD flow.
+- [`docs/deployment.md`](docs/deployment.md) - provisioning, access, deployment, troubleshooting, and teardown.
+- [`docs/terraform-modules.md`](docs/terraform-modules.md) - module-by-module Terraform reference.
+- [`docs/application.md`](docs/application.md) - Django, Docker, Helm chart, and runtime configuration.
+
 *Disclaimer: NAT instance is used for outbound internet access instead of an AWS NAT Gateway for the
 cost savings.
 Spot instances on EKS nodes are used for the same reason.*
@@ -367,4 +376,3 @@ The application is deployed using helm chart that supports the following feature
 - Database connection parameters are passed to the application via environment variables.
 - Chart supports RDS or [standalone PostgreSQL deployed as dependency](charts/django-app/values.yaml#L30).
 - Application has [HPA](charts/django-app/templates/hpa.yaml) enabled.
-  
