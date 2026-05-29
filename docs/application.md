@@ -27,7 +27,7 @@ The settings file reads PostgreSQL connection values from environment variables:
 | `POSTGRES_USER` | `postgres` |
 | `POSTGRES_PASSWORD` | empty string |
 
-Note: the Helm chart currently uses `POSTGRES_NAME`, while Django settings read `POSTGRES_DB`. Align these names before relying on the chart-provided database name.
+Note: the Helm chart currently uses `POSTGRES_NAME`, while Django settings read `POSTGRES_DB`. Align these names before relying on the chart-provided database name. Postgress password is 111111.
 
 ## Run Locally
 
